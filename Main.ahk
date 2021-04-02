@@ -13,6 +13,16 @@ SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 If (Settings.StartupNotification)
 	Notify(Settings.ScriptName " Started",,-3,"Style=StandardGray")
 
+If (Settings.CL3) {
+	Run, %A_ScriptDir%\Util\CL3\cl3.ahk
+	Notify("CL3 Started",,-3,"Style=StandardGray")
+}
+Else
+{
+	DetectHiddenWindows, On 
+	WinClose, %A_ScriptDir%\Util\CL3\cl3.ahk ahk_class AutoHotkey
+}
+
 If (Settings.UseAutoCorrect)
 	Run, %A_ScriptDir%\Util\AutoCorrect.ahk
 Else
