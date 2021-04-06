@@ -3,5 +3,13 @@
 SendMode Input  ; Recommended for new scripts due to its superior speed and reliability.
 SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 
-Run, *RunAs powershell.exe -ExecutionPolicy Bypass -command "Set-MpPreference -DisableRealtimeMonitoring $false"
-; Run, C:\Program Files\advancedrun-x64\AdvancedRun.exe /EXEFilename "C:\Users\ajhad\Documents\AHKScripts\disable_defender.bat" /RunAs 8 /Run
+WinActivate, ahk_class wxWindowNR ahk_exe googledrivesync.exe
+WinWait, ahk_class wxWindowNR ahk_exe googledrivesync.exe
+Send, Settings, {Enter}, ahk_class wxWindowNR ahk_exe googledrivesync.exe
+Sleep, 250
+if WinExist(["ahk_class wxWindowNR ahk_exe googledrivesync.exe", "Pause"]) {
+    Send, Pause, {Enter}, ahk_class wxWindowNR ahk_exe googledrivesync.exe
+    Sleep, 250
+}
+; Send, Settings, {Tab}, ahk_class wxWindowNR ahk_exe googledrivesync.exe
+; Send, Settings, {Tab}, ahk_class wxWindowNR ahk_exe googledrivesync.exe

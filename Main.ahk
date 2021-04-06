@@ -31,6 +31,16 @@ Else
 	WinClose, %A_ScriptDir%\Util\AutoCorrect.ahk ahk_class AutoHotkey
 }
 
+Run, %A_ScriptDir%\Scripts\PowerModeChanges.ahk
+
+SleepTime := 30*60*1000
+SetTimer, PowerModeChanges, %SleepTime%
+return
+
 #Include *i %A_ScriptDir%\Scripts\Hotkeys.ahk
 #Include *i %A_ScriptDir%\Scripts\AppSpecific.ahk
 #Include *i %A_ScriptDir%\Scripts\HotStrings.ahk
+
+PowerModeChanges:
+Run, %A_ScriptDir%\Scripts\PowerModeChanges.ahk
+return
