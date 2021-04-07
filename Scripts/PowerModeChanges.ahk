@@ -33,13 +33,16 @@ if (acLineStatus = 0) {
 		if WinExist(["ahk_class wxWindowNR ahk_exe googledrivesync.exe", "Pause"]) {
 			Send, "Pause", {Enter}, ahk_class wxWindowNR ahk_exe googledrivesync.exe
 			Sleep, 250
+			WinClose, ahk_class wxWindowNR ahk_exe googledrivesync.exe
 		}
 	}
+	Sleep, 250
 	defenderStatus := % RunWaitMany("
 		(
     	PowerShell.exe -ExecutionPolicy Bypass -Command $Preferences = Get-MpPreference; $Preferences.DisableRealtimeMonitoring
     	)")
-	if defenderstatus contains False
+	; MsgBox % defenderStatus
+	if defenderStatus contains False
 		Run, *RunAs powershell.exe -ExecutionPolicy Bypass -command "Set-MpPreference -DisableRealtimeMonitoring $true"
 } else {
 	Run, C:\Program Files (x86)\Plantronics\Spokes3G\PLTHub.exe
@@ -55,13 +58,15 @@ if (acLineStatus = 0) {
 		if WinExist(["ahk_class wxWindowNR ahk_exe googledrivesync.exe", "Resume"]) {
 			Send, "Resume", {Enter}, ahk_class wxWindowNR ahk_exe googledrivesync.exe
 			Sleep, 250
+			WinClose, ahk_class wxWindowNR ahk_exe googledrivesync.exe
 		}
 	}
+	Sleep, 250
 	defenderStatus := % RunWaitMany("
 		(
     	PowerShell.exe -ExecutionPolicy Bypass -Command $Preferences = Get-MpPreference; $Preferences.DisableRealtimeMonitoring
     	)")
-	if defenderstatus contains True
+	if defenderStatus contains True
 		Run, *RunAs powershell.exe -ExecutionPolicy Bypass -command "Set-MpPreference -DisableRealtimeMonitoring $false",, "Min"
 }
 ExitApp

@@ -3,13 +3,17 @@
 SendMode Input  ; Recommended for new scripts due to its superior speed and reliability.
 SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 
-defenderstatus := % RunWaitMany("
-	(
-    PowerShell.exe -ExecutionPolicy Bypass -Command $Preferences = Get-MpPreference; $Preferences.DisableRealtimeMonitoring
-    )")
-MsgBox % defenderstatus
-if defenderstatus contains True
-    Run, *RunAs powershell.exe -ExecutionPolicy Bypass -command "Set-MpPreference -DisableRealtimeMonitoring $false",, "Min"
+WinActivate, ahk_class wxWindowNR ahk_exe googledrivesync.exe
+WinWait, ahk_class wxWindowNR ahk_exe googledrivesync.exe,, 3
+if WinExist(["ahk_class wxWindowNR ahk_exe googledrivesync.exe"]) {
+    Send, Settings, {Enter}, ahk_class wxWindowNR ahk_exe googledrivesync.exe
+    Sleep, 1000
+    if WinExist(["ahk_class wxWindowNR ahk_exe googledrivesync.exe", "Resume"]) {
+        Send, "Resume", {Enter}, ahk_class wxWindowNR ahk_exe googledrivesync.exe
+        Sleep, 250
+        WinClose, ahk_class wxWindowNR ahk_exe googledrivesync.exe
+    }
+}
 
 RunWaitOne(command) {
     ; WshShell object: http://msdn.microsoft.com/en-us/library/aew9yb99
