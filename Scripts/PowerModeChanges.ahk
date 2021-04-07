@@ -26,12 +26,14 @@ if (acLineStatus = 0) {
 	Process, Close, OVRServiceLauncher.exe
 	Process, Close, MsMpEng.exe
 	WinActivate, ahk_class wxWindowNR ahk_exe googledrivesync.exe
-	WinWait, ahk_class wxWindowNR ahk_exe googledrivesync.exe
-	Send, Settings, {Enter}, ahk_class wxWindowNR ahk_exe googledrivesync.exe
-	Sleep, 250
-	if WinExist(["ahk_class wxWindowNR ahk_exe googledrivesync.exe", "Pause"]) {
-		Send, "Pause", {Enter}, ahk_class wxWindowNR ahk_exe googledrivesync.exe
+	WinWait, ahk_class wxWindowNR ahk_exe googledrivesync.exe,, 3
+	if WinExist(["ahk_class wxWindowNR ahk_exe googledrivesync.exe"]) {
+		Send, Settings, {Enter}, ahk_class wxWindowNR ahk_exe googledrivesync.exe
 		Sleep, 250
+		if WinExist(["ahk_class wxWindowNR ahk_exe googledrivesync.exe", "Pause"]) {
+			Send, "Pause", {Enter}, ahk_class wxWindowNR ahk_exe googledrivesync.exe
+			Sleep, 250
+		}
 	}
 	defenderStatus := % RunWaitMany("
 		(
@@ -46,12 +48,14 @@ if (acLineStatus = 0) {
 	WinWait, ahk_exe PLTHub.exe
 	PostMessage, 0x0112, 0xF060,,, ahk_exe PLTHub.exe
 	WinActivate, ahk_class wxWindowNR ahk_exe googledrivesync.exe
-	WinWait, ahk_class wxWindowNR ahk_exe googledrivesync.exe
-	Send, Settings, {Enter}, ahk_class wxWindowNR ahk_exe googledrivesync.exe
-	Sleep, 250
-	if WinExist(["ahk_class wxWindowNR ahk_exe googledrivesync.exe", "Resume"]) {
-		Send, "Resume", {Enter}, ahk_class wxWindowNR ahk_exe googledrivesync.exe
+	WinWait, ahk_class wxWindowNR ahk_exe googledrivesync.exe,, 3
+	if WinExist(["ahk_class wxWindowNR ahk_exe googledrivesync.exe"]) {
+		Send, Settings, {Enter}, ahk_class wxWindowNR ahk_exe googledrivesync.exe
 		Sleep, 250
+		if WinExist(["ahk_class wxWindowNR ahk_exe googledrivesync.exe", "Resume"]) {
+			Send, "Resume", {Enter}, ahk_class wxWindowNR ahk_exe googledrivesync.exe
+			Sleep, 250
+		}
 	}
 	defenderStatus := % RunWaitMany("
 		(
