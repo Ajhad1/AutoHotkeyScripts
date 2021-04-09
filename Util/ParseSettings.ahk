@@ -1,5 +1,6 @@
-; Referenced from https://www.autohotkey.com/boards/viewtopic.php?p=221966#p221966
-; Original Creator @jeeswg 
+; Reference/Created By:
+;       @jeeswg 
+;       https://www.autohotkey.com/boards/viewtopic.php?p=221966#p221966
 
 vPath := A_ScriptDir "\Settings.ini"
 FileRead, vText, % vPath
