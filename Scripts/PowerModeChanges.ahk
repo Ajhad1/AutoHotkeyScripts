@@ -128,7 +128,7 @@ GetPluggedStatus() { ; https://autohotkey.com/board/topic/7022-acbattery-status/
 	return % acLineStatusTemp
 }
 
-ReadInteger( p_address, p_offset, p_size, p_hex=true ) {
+ReadInteger( p_address, p_offset, p_size, p_hex=true ) { ; https://www.tcg.com/blog/quickly-change-windows-10-resolution-with-autohotkey/
 	value = 0
 	old_FormatInteger := a_FormatInteger
 	if ( p_hex )
@@ -141,29 +141,29 @@ ReadInteger( p_address, p_offset, p_size, p_hex=true ) {
 	return, value
 }
 
-RunWaitOne(command) { ; https://www.autohotkey.com/docs/commands/Run.htm#StdOut
-    ; WshShell object: http://msdn.microsoft.com/en-us/library/aew9yb99
-    shell := ComObjCreate("WScript.Shell")
-    ; Execute a single command via cmd.exe
-    exec := shell.Exec(ComSpec " /C " command)
-    ; Read and return the command's output
-    return exec.StdOut.ReadAll()
-}
+; RunWaitOne(command) { ; https://www.autohotkey.com/docs/commands/Run.htm#StdOut
+;     ; WshShell object: http://msdn.microsoft.com/en-us/library/aew9yb99
+;     shell := ComObjCreate("WScript.Shell")
+;     ; Execute a single command via cmd.exe
+;     exec := shell.Exec(ComSpec " /C " command)
+;     ; Read and return the command's output
+;     return exec.StdOut.ReadAll()
+; }
 
-RunWaitMany(commands) { ; https://www.autohotkey.com/docs/commands/Run.htm#StdOut
-    shell := ComObjCreate("WScript.Shell")
-    ; Open cmd.exe with echoing of commands disabled
-    exec := shell.Exec(ComSpec " /Q /K echo off")
-    ; Send the commands to execute, separated by newline
-    exec.StdIn.WriteLine(commands "`nexit")  ; Always exit at the end!
-    ; Read and return the output of all commands
-    return exec.StdOut.ReadAll()
-}
+; RunWaitMany(commands) { ; https://www.autohotkey.com/docs/commands/Run.htm#StdOut
+;     shell := ComObjCreate("WScript.Shell")
+;     ; Open cmd.exe with echoing of commands disabled
+;     exec := shell.Exec(ComSpec " /Q /K echo off")
+;     ; Send the commands to execute, separated by newline
+;     exec.StdIn.WriteLine(commands "`nexit")  ; Always exit at the end!
+;     ; Read and return the output of all commands
+;     return exec.StdOut.ReadAll()
+; }
 
-ProcessExist(Name){
-	Process,Exist,%Name%
-	return Errorlevel
-}
+; ProcessExist(Name){
+; 	Process,Exist,%Name%
+; 	return Errorlevel
+; }
 
 GoogleDrivePauseToggle() {
 	if !WinExist("Backup and Sync ahk_class wxWindowNR ahk_exe googledrivesync.exe") {
@@ -196,13 +196,13 @@ GoogleDrivePauseToggle() {
 	OutputDebug, % FormatLocalTime() ":`t" A_ScriptName ": Google Drive script is completed"
 }
 
-DebugIntro() ; Returns Debug Intro which includes Local Time and Script name
-{
-	return % (FormatLocalTime() "=> " A_ScriptName ": ")
-}
+; DebugIntro() ; Returns Debug Intro which includes Local Time and Script name
+; {
+; 	return % (FormatLocalTime() "=> " A_ScriptName ": ")
+; }
 
-FormatLocalTime() ; Returns current time as local time
-{
-    FormatTime, localTime,,MM/dd/yyyy HH:mm:ss
-    return localTime
-}
+; FormatLocalTime() ; Returns current time as local time
+; {
+;     FormatTime, localTime,,MM/dd/yyyy HH:mm:ss
+;     return localTime
+; }
