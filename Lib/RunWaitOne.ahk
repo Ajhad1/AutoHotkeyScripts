@@ -16,9 +16,11 @@
 ;       *Output:*
 ;       > Dir Contents
 
-; WshShell object: http://msdn.microsoft.com/en-us/library/aew9yb99
-shell := ComObjCreate("WScript.Shell")
-; Execute a single command via cmd.exe
-exec := shell.Exec(ComSpec " /C " command)
-; Read and return the command's output
-return exec.StdOut.ReadAll()
+RunWaitOne(command) {
+    ; WshShell object: http://msdn.microsoft.com/en-us/library/aew9yb99
+    shell := ComObjCreate("WScript.Shell")
+    ; Execute a single command via cmd.exe
+    exec := shell.Exec(ComSpec " /C " command)
+    ; Read and return the command's output
+    return exec.StdOut.ReadAll()
+}

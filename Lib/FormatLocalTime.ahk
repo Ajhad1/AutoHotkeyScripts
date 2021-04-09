@@ -16,5 +16,7 @@
 ;     *Output:*
 ;     > 2021/04/29 10:10:03
 
-FormatTime, localTime,,yyyy/MM/dd HH:mm:ss
+FormatLocalTime() {
+    FormatTime, localTime,,yyyy/MM/dd HH:mm:ss
     return localTime
+}

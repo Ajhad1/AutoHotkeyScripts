@@ -16,4 +16,7 @@
 ;     *Output:*
 ;     > 2021/04/29 10:10:03 => PowerModeChanges.ahk: 
 
-return % (FormatLocalTime() " => " A_ScriptName ": ")
+DebugIntro() {
+    temp := FormatLocalTime() " => " A_ScriptName ": "
+    return temp
+}

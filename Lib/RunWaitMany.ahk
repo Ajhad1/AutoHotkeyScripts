@@ -21,10 +21,12 @@
 ;       > each one will be run,
 ;       > and you'll get the output.
 
-shell := ComObjCreate("WScript.Shell")
-; Open cmd.exe with echoing of commands disabled
-exec := shell.Exec(ComSpec " /Q /K echo off")
-; Send the commands to execute, separated by newline
-exec.StdIn.WriteLine(commands "`nexit")  ; Always exit at the end!
-; Read and return the output of all commands
-return exec.StdOut.ReadAll()
+RunWaitMany(commands) {
+    shell := ComObjCreate("WScript.Shell")
+    ; Open cmd.exe with echoing of commands disabled
+    exec := shell.Exec(ComSpec " /Q /K echo off")
+    ; Send the commands to execute, separated by newline
+    exec.StdIn.WriteLine(commands "`nexit")  ; Always exit at the end!
+    ; Read and return the output of all commands
+    return exec.StdOut.ReadAll()
+}

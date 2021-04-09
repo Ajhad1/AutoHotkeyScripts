@@ -18,5 +18,7 @@
 ;       *Output:*
 ;       > Process Exists
 
-Process,Exist,%Name%
-return Errorlevel
+ProcessExist(Name) {
+    Process,Exist,%Name%
+    return Errorlevel
+}
