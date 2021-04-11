@@ -16,6 +16,7 @@ IniRead, prevRun, %A_ScriptDir%\Vars.ini, Vars, prevRun, 1 ; prevRun is the prev
 
 OutputDebug, % DebugIntro() "Getting Plugged Status"
 acLineStatus := GetPluggedStatus()
+OutputDebug, % DebugIntro() "Plugged Status is " acLineStatus " and PrevRun is " prevRun
 ; VarSetCapacity(powerstatus, 1+1+1+1+4+4)
 ; success := DllCall("kernel32.dll\GetSystemPowerStatus", "uint", &powerstatus)
 
@@ -32,7 +33,7 @@ if (acLineStatus = 0 and prevRun = 1) {
 	OutputDebug, % DebugIntro() "Stopping Executables"
 	OutputDebug, % DebugIntro() "--------------------"
 	OutputDebug, % DebugIntro() "Stopping PLTHub.exe"
-	Process, Close, PLTHub.exe
+	Process, WaitClose, PLTHub.exe, 3
 	GroupAdd, PLTHub, ahk_exe PLTHub.exe
 	WinKill, ahk_group PLTHub
 	OutputDebug, % DebugIntro() "Stopping SpokesUpdateService.exe"
@@ -69,10 +70,14 @@ if (acLineStatus = 0 and prevRun = 1) {
 		OutputDebug, % DebugIntro() "Turning off Defender"
 	if defenderStatus contains False
 		Run, *RunAs powershell.exe -ExecutionPolicy Bypass -command "Set-MpPreference -DisableRealtimeMonitoring $true" ; https://docs.microsoft.com/en-us/powershell/module/defender/set-mppreference?view=windowsserver2019-ps
-	if WinExist("ahk_group PLTHub")
+	if WinExist("ahk_group PLTHub") {
 		OutputDebug, % DebugIntro() "Waiting on Plantronics Hub to close"
-	WinWaitClose, ahk_group PLTHub
-} else if (acLineStatus = 1 and prevRun = 0) {
+		Process, WaitClose, PLTHub.exe, 3
+		GroupAdd, PLTHub, ahk_exe PLTHub.exe
+		WinKill, ahk_group PLTHub
+		; WinWaitClose, ahk_group PLTHub
+	}
+} else if (acLineStatus = 1) {
 	OutputDebug, % DebugIntro() "Computer is plugged in"
 	PLTHubCreated := False
 	if !ProcessExist("PLTHub.exe") {
@@ -141,30 +146,6 @@ ReadInteger( p_address, p_offset, p_size, p_hex=true ) { ; https://www.tcg.com/b
 	return, value
 }
 
-; RunWaitOne(command) { ; https://www.autohotkey.com/docs/commands/Run.htm#StdOut
-;     ; WshShell object: http://msdn.microsoft.com/en-us/library/aew9yb99
-;     shell := ComObjCreate("WScript.Shell")
-;     ; Execute a single command via cmd.exe
-;     exec := shell.Exec(ComSpec " /C " command)
-;     ; Read and return the command's output
-;     return exec.StdOut.ReadAll()
-; }
-
-; RunWaitMany(commands) { ; https://www.autohotkey.com/docs/commands/Run.htm#StdOut
-;     shell := ComObjCreate("WScript.Shell")
-;     ; Open cmd.exe with echoing of commands disabled
-;     exec := shell.Exec(ComSpec " /Q /K echo off")
-;     ; Send the commands to execute, separated by newline
-;     exec.StdIn.WriteLine(commands "`nexit")  ; Always exit at the end!
-;     ; Read and return the output of all commands
-;     return exec.StdOut.ReadAll()
-; }
-
-; ProcessExist(Name){
-; 	Process,Exist,%Name%
-; 	return Errorlevel
-; }
-
 GoogleDrivePauseToggle() {
 	if !WinExist("Backup and Sync ahk_class wxWindowNR ahk_exe googledrivesync.exe") {
 		OutputDebug, % DebugIntro() "Google Drive is not running"
@@ -176,9 +157,16 @@ GoogleDrivePauseToggle() {
 	}
 	if WinExist("Backup and Sync ahk_class wxWindowNR ahk_exe googledrivesync.exe") {
 		OutputDebug, % DebugIntro() "Google Drive window exists"
+		OutputDebug, % DebugIntro() "Google Drive activating window"
 		WinActivate, Backup and Sync ahk_class wxWindowNR ahk_exe googledrivesync.exe
-		WinWaitActive, Backup and Sync ahk_class wxWindowNR ahk_exe googledrivesync.exe
+		OutputDebug, % DebugIntro() "Google Drive waiting for window to exist"
+		WinWaitActive, Backup and Sync ahk_class wxWindowNR ahk_exe googledrivesync.exe, 5
+		if !WinActive("Backup and Sync ahk_class wxWindowNR ahk_exe googledrivesync.exe") {
+			WinRestore, Backup and Sync ahk_class wxWindowNR ahk_exe googledrivesync.exe
+			WinActivate, Backup and Sync ahk_class wxWindowNR ahk_exe googledrivesync.exe
+		}
 		OutputDebug, % DebugIntro() "Google Drive is sending enter to settings button"
+		Sleep 250
 		Send, {Enter}
 		Sleep, 250
 		OutputDebug, % DebugIntro() "Google Drive is sending {Down 4}{Enter} to settings menu"
@@ -205,4 +193,28 @@ GoogleDrivePauseToggle() {
 ; {
 ;     FormatTime, localTime,,MM/dd/yyyy HH:mm:ss
 ;     return localTime
+; }
+
+; RunWaitOne(command) { ; https://www.autohotkey.com/docs/commands/Run.htm#StdOut
+;     ; WshShell object: http://msdn.microsoft.com/en-us/library/aew9yb99
+;     shell := ComObjCreate("WScript.Shell")
+;     ; Execute a single command via cmd.exe
+;     exec := shell.Exec(ComSpec " /C " command)
+;     ; Read and return the command's output
+;     return exec.StdOut.ReadAll()
+; }
+
+; RunWaitMany(commands) { ; https://www.autohotkey.com/docs/commands/Run.htm#StdOut
+;     shell := ComObjCreate("WScript.Shell")
+;     ; Open cmd.exe with echoing of commands disabled
+;     exec := shell.Exec(ComSpec " /Q /K echo off")
+;     ; Send the commands to execute, separated by newline
+;     exec.StdIn.WriteLine(commands "`nexit")  ; Always exit at the end!
+;     ; Read and return the output of all commands
+;     return exec.StdOut.ReadAll()
+; }
+
+; ProcessExist(Name){
+; 	Process,Exist,%Name%
+; 	return Errorlevel
 ; }
