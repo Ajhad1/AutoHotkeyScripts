@@ -17,4 +17,4 @@
 Notify(Settings.ScriptName " is loading HotKeys.ahk",,Settings.NotificationTimer,"Style=StandardGray")
 
 ; Reload entire script
-^!r::Reload
+^!r::Reload  ; Ctrl+Alt+r
