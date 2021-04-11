@@ -40,21 +40,21 @@ Else
 If (Settings.PowerModeChangesOnStartup and Settings.SleepActivate) {
     Notify(Settings.ScriptName " is setting " Settings.SleepTimeMin " minute timer for PowerModeChanges",,Settings.NotificationTimer,"Style=StandardGray")
     SleepTime := Settings.SleepTimeMin*60*1000
-    SetTimer, PowerModeChanges, %SleepTime%
+    ; SetTimer, PowerModeChanges, %SleepTime%
     ; return
 } else if (Settings.SleepActivate) {
     Notify(Settings.ScriptName " is setting " Settings.SleepTimeMin " minute timer for PowerModeChanges",,Settings.NotificationTimer,"Style=StandardGray")
     SleepTime := Settings.SleepTimeMin*60*1000
-    SetTimer, PowerModeChanges, %SleepTime%
-    ; return
+    ; SetTimer, PowerModeChanges, %SleepTime%
+    return
 } else if (Settings.PowerModeChangesOnStartup) {
     Notify(Settings.ScriptName " running PowerModeChanges",,Settings.NotificationTimer,"Style=StandardGray")
     RunWait, %A_ScriptDir%\Scripts\PowerModeChanges.ahk
     Notify(Settings.ScriptName " finished PowerModeChanges",,Settings.NotificationTimer,"Style=StandardGray")
 }
 
-PowerModeChanges:
-Notify(Settings.ScriptName " running PowerModeChanges",,Settings.NotificationTimer,"Style=StandardGray")
-RunWait, %A_ScriptDir%\Scripts\PowerModeChanges.ahk
-Notify(Settings.ScriptName " finished PowerModeChanges",,Settings.NotificationTimer,"Style=StandardGray")
+; PowerModeChanges:
+; Notify(Settings.ScriptName " running PowerModeChanges",,Settings.NotificationTimer,"Style=StandardGray")
+; RunWait, %A_ScriptDir%\Scripts\PowerModeChanges.ahk
+; Notify(Settings.ScriptName " finished PowerModeChanges",,Settings.NotificationTimer,"Style=StandardGray")
 ; return
