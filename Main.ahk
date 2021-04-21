@@ -37,19 +37,22 @@ Else
 #Include *i %A_ScriptDir%\Scripts\AppSpecific.ahk
 #Include *i %A_ScriptDir%\Scripts\HotStrings.ahk
 
+If (Settings.StartupNotification)
+	Notify(Settings.ScriptName " Startup Complete",,Settings.NotificationTimer,"Style=StandardGray")
+
 If (Settings.PowerModeChangesOnStartup and Settings.SleepActivate) {
     Notify(Settings.ScriptName " is setting " Settings.SleepTimeMin " minute timer for PowerModeChanges",,Settings.NotificationTimer,"Style=StandardGray")
-    SleepTime := Settings.SleepTimeMin*60*1000
+    ; SleepTime := Settings.SleepTimeMin*60*1000
     ; SetTimer, PowerModeChanges, %SleepTime%
     ; return
 } else if (Settings.SleepActivate) {
     Notify(Settings.ScriptName " is setting " Settings.SleepTimeMin " minute timer for PowerModeChanges",,Settings.NotificationTimer,"Style=StandardGray")
-    SleepTime := Settings.SleepTimeMin*60*1000
+    ; SleepTime := Settings.SleepTimeMin*60*1000
     ; SetTimer, PowerModeChanges, %SleepTime%
     return
 } else if (Settings.PowerModeChangesOnStartup) {
     Notify(Settings.ScriptName " running PowerModeChanges",,Settings.NotificationTimer,"Style=StandardGray")
-    RunWait, %A_ScriptDir%\Scripts\PowerModeChanges.ahk
+    ; RunWait, %A_ScriptDir%\Scripts\PowerModeChanges.ahk
     Notify(Settings.ScriptName " finished PowerModeChanges",,Settings.NotificationTimer,"Style=StandardGray")
 }
 
