@@ -55,10 +55,6 @@ if (acLineStatus = 0 and prevRun = 1) {
 	OutputDebug, % DebugIntro() "Stopping MsMpEng.exe"
 	Process, Close, MsMpEng.exe
 	OutputDebug, % DebugIntro() "--------------------"
-	if !(acLineStatus = prevRun) {
-		OutputDebug, % DebugIntro() "Starting GoogleDrivePauseToggle()"
-		GoogleDrivePauseToggle()
-	}
 	OutputDebug, % DebugIntro() "Getting Defender Disabled Status"
 	; https://docs.microsoft.com/en-us/powershell/module/defender/get-mppreference?view=windowsserver2019-ps
 	defenderStatus := % RunWaitMany("
@@ -77,6 +73,10 @@ if (acLineStatus = 0 and prevRun = 1) {
 		WinKill, ahk_group PLTHub
 		; WinWaitClose, ahk_group PLTHub
 	}
+	if !(acLineStatus = prevRun) {
+		OutputDebug, % DebugIntro() "Starting GoogleDrivePauseToggle()"
+		GoogleDrivePauseToggle()
+	}
 } else if (acLineStatus = 1) {
 	OutputDebug, % DebugIntro() "Computer is plugged in"
 	PLTHubCreated := False
@@ -94,10 +94,6 @@ if (acLineStatus = 0 and prevRun = 1) {
 		WinWait, ahk_exe PLTHub.exe
 		PostMessage, 0x0112, 0xF060,,, ahk_exe PLTHub.exe
 	}
-	if !(acLineStatus = prevRun) {
-		OutputDebug, % DebugIntro() "Starting GoogleDrivePauseToggle()"
-		GoogleDrivePauseToggle()
-	}
 	OutputDebug, % DebugIntro() "Getting Defender Disabled Status"
 	; https://docs.microsoft.com/en-us/powershell/module/defender/get-mppreference?view=windowsserver2019-ps
 	defenderStatus := % RunWaitMany("
@@ -109,6 +105,10 @@ if (acLineStatus = 0 and prevRun = 1) {
 		OutputDebug, % DebugIntro() "Turning on Defender"
 	if defenderStatus contains True 
 		Run, *RunAs powershell.exe -ExecutionPolicy Bypass -command "Set-MpPreference -DisableRealtimeMonitoring $false",, "Min" ; https://docs.microsoft.com/en-us/powershell/module/defender/set-mppreference?view=windowsserver2019-ps
+	if !(acLineStatus = prevRun) {
+		OutputDebug, % DebugIntro() "Starting GoogleDrivePauseToggle()"
+		GoogleDrivePauseToggle()
+	}
 }
 OutputDebug, % DebugIntro() A_ScriptName " completed --------------------"
 IniWrite, prevRun=%acLineStatus%, %A_ScriptDir%\Vars.ini, Vars
@@ -158,12 +158,18 @@ GoogleDrivePauseToggle() {
 	if WinExist("Backup and Sync ahk_class wxWindowNR ahk_exe googledrivesync.exe") {
 		OutputDebug, % DebugIntro() "Google Drive window exists"
 		OutputDebug, % DebugIntro() "Google Drive activating window"
-		WinActivate, Backup and Sync ahk_class wxWindowNR ahk_exe googledrivesync.exe
+		; WinActivate, Backup and Sync ahk_class wxWindowNR ahk_exe googledrivesync.exe
+		TrayIcon_Button("googledrivesync.exe","R")
+		TrayIcon_Button("googledrivesync.exe","R")
+		TrayIcon_Button("googledrivesync.exe","R")
 		OutputDebug, % DebugIntro() "Google Drive waiting for window to exist"
 		WinWaitActive, Backup and Sync ahk_class wxWindowNR ahk_exe googledrivesync.exe, 5
 		if !WinActive("Backup and Sync ahk_class wxWindowNR ahk_exe googledrivesync.exe") {
 			WinRestore, Backup and Sync ahk_class wxWindowNR ahk_exe googledrivesync.exe
-			WinActivate, Backup and Sync ahk_class wxWindowNR ahk_exe googledrivesync.exe
+			; WinActivate, Backup and Sync ahk_class wxWindowNR ahk_exe googledrivesync.exe
+			TrayIcon_Button("googledrivesync.exe","R")
+			TrayIcon_Button("googledrivesync.exe","R")
+			TrayIcon_Button("googledrivesync.exe","R")
 		}
 		OutputDebug, % DebugIntro() "Google Drive is sending enter to settings button"
 		Sleep 250
