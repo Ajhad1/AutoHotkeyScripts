@@ -12,70 +12,80 @@ SendMode Input  ; Recommended for new scripts due to its superior speed and reli
 SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 OutputDebug, % DebugIntro() "Env Setup"
 
+#Include %A_ScriptDir%\Lib\ParseSettings.ahk
+
 IniRead, prevRun, %A_ScriptDir%\Vars.ini, Vars, prevRun, 1 ; prevRun is the previous run status where 0 is unplugged and 1 is plugged in
 
 OutputDebug, % DebugIntro() "Getting Plugged Status"
 acLineStatus := GetPluggedStatus()
 OutputDebug, % DebugIntro() "Plugged Status is " acLineStatus " and PrevRun is " prevRun
-; VarSetCapacity(powerstatus, 1+1+1+1+4+4)
-; success := DllCall("kernel32.dll\GetSystemPowerStatus", "uint", &powerstatus)
 
-; acLineStatus:=ReadInteger(&powerstatus,0,1,false)
-; if (acLineStatus != 0 and acLineStatus != 1)
-; 	acLineStatus := 0
+if (acLineStatus = 0 and prevRun = 0) {
+	OutputDebug, % DebugIntro() "Computer is not plugged in"
+}
 
 if (acLineStatus = 0 and prevRun = 1) {
 	OutputDebug, % DebugIntro() "Computer is not plugged in"
 	OutputDebug, % DebugIntro() "Changing Resolution"
     ChangeResolution(32,1920,1080,60)
-	OutputDebug, % DebugIntro() "Turning off Bluetooth"
-	Run, PowerShell.exe -ExecutionPolicy Bypass -Command "./bluetooth.ps1 -BluetoothStatus Off",, "Hide" ; https://superuser.com/questions/1494499/modify-a-powershell-that-receive-argument-on-off-to-start-stop-service-to-a-scri
-	OutputDebug, % DebugIntro() "Stopping Executables"
-	OutputDebug, % DebugIntro() "--------------------"
-	OutputDebug, % DebugIntro() "Stopping PLTHub.exe"
-	Process, WaitClose, PLTHub.exe, 3
-	GroupAdd, PLTHub, ahk_exe PLTHub.exe
-	WinKill, ahk_group PLTHub
-	OutputDebug, % DebugIntro() "Stopping SpokesUpdateService.exe"
-	Process, Close, SpokesUpdateService.exe
-	OutputDebug, % DebugIntro() "Stopping VirtualDesktop.Service.exe"
-	Process, Close, VirtualDesktop.Service.exe
-	OutputDebug, % DebugIntro() "Stopping XboxAppServices.exe"
-	Process, Close, XboxAppServices.exe
-	OutputDebug, % DebugIntro() "Stopping OriginThinSetupInternal.exe"
-	Process, Close, OriginThinSetupInternal.exe
-	OutputDebug, % DebugIntro() "Stopping OriginWebHelperService.exe"
-	Process, Close, OriginWebHelperService.exe
-	OutputDebug, % DebugIntro() "Stopping OVRServer_x64.exe"
-	Process, Close, OVRServer_x64.exe
-	OutputDebug, % DebugIntro() "Stopping OVRRedir.exe"
-	Process, Close, OVRRedir.exe
-	OutputDebug, % DebugIntro() "Stopping OVRServiceLauncher.exe"
-	Process, Close, OVRServiceLauncher.exe
-	OutputDebug, % DebugIntro() "Stopping MsMpEng.exe"
-	Process, Close, MsMpEng.exe
-	OutputDebug, % DebugIntro() "--------------------"
-	OutputDebug, % DebugIntro() "Getting Defender Disabled Status"
-	; https://docs.microsoft.com/en-us/powershell/module/defender/get-mppreference?view=windowsserver2019-ps
-	defenderStatus := % RunWaitMany("
-		(
-    	PowerShell.exe -ExecutionPolicy Bypass -Command $Preferences = Get-MpPreference; $Preferences.DisableRealtimeMonitoring 
-    	)") 
-	OutputDebug, % DebugIntro() "Defender Disabled Status is " defenderStatus
-	if defenderStatus contains False
-		OutputDebug, % DebugIntro() "Turning off Defender"
-	if defenderStatus contains False
-		Run, *RunAs powershell.exe -ExecutionPolicy Bypass -command "Set-MpPreference -DisableRealtimeMonitoring $true" ; https://docs.microsoft.com/en-us/powershell/module/defender/set-mppreference?view=windowsserver2019-ps
-	if WinExist("ahk_group PLTHub") {
+	if (Settings.BluetoothOff) {
+		OutputDebug, % DebugIntro() "Turning off Bluetooth"
+		Run, PowerShell.exe -ExecutionPolicy Bypass -Command "./bluetooth.ps1 -BluetoothStatus Off",, "Hide" ; https://superuser.com/questions/1494499/modify-a-powershell-that-receive-argument-on-off-to-start-stop-service-to-a-scri
+	}
+	if (Settings.StopServices) {
+		OutputDebug, % DebugIntro() "Stopping Executables"
+		OutputDebug, % DebugIntro() "--------------------"
+		OutputDebug, % DebugIntro() "Stopping PLTHub.exe"
+		Process, WaitClose, PLTHub.exe, 3
+		GroupAdd, PLTHub, ahk_exe PLTHub.exe
+		WinKill, ahk_group PLTHub
+		OutputDebug, % DebugIntro() "Stopping SpokesUpdateService.exe"
+		Process, Close, SpokesUpdateService.exe
+		OutputDebug, % DebugIntro() "Stopping VirtualDesktop.Service.exe"
+		Process, Close, VirtualDesktop.Service.exe
+		OutputDebug, % DebugIntro() "Stopping XboxAppServices.exe"
+		Process, Close, XboxAppServices.exe
+		OutputDebug, % DebugIntro() "Stopping OriginThinSetupInternal.exe"
+		Process, Close, OriginThinSetupInternal.exe
+		OutputDebug, % DebugIntro() "Stopping OriginWebHelperService.exe"
+		Process, Close, OriginWebHelperService.exe
+		OutputDebug, % DebugIntro() "Stopping OVRServer_x64.exe"
+		Process, Close, OVRServer_x64.exe
+		OutputDebug, % DebugIntro() "Stopping OVRRedir.exe"
+		Process, Close, OVRRedir.exe
+		OutputDebug, % DebugIntro() "Stopping OVRServiceLauncher.exe"
+		Process, Close, OVRServiceLauncher.exe
+		OutputDebug, % DebugIntro() "Stopping MsMpEng.exe"
+		Process, Close, MsMpEng.exe
+		OutputDebug, % DebugIntro() "--------------------"
+	}
+	if (Settings.Defender) {
+		OutputDebug, % DebugIntro() "Getting Defender Disabled Status"
+		; https://docs.microsoft.com/en-us/powershell/module/defender/get-mppreference?view=windowsserver2019-ps
+		defenderStatus := % RunWaitMany("
+			(
+			PowerShell.exe -ExecutionPolicy Bypass -Command $Preferences = Get-MpPreference; $Preferences.DisableRealtimeMonitoring 
+			)") 
+		OutputDebug, % DebugIntro() "Defender Disabled Status is " defenderStatus
+		if defenderStatus contains False
+			OutputDebug, % DebugIntro() "Turning off Defender"
+		if defenderStatus contains False
+			Run, *RunAs powershell.exe -ExecutionPolicy Bypass -command "Set-MpPreference -DisableRealtimeMonitoring $true" ; https://docs.microsoft.com/en-us/powershell/module/defender/set-mppreference?view=windowsserver2019-ps
+	}
+	if (Settings.StopServices) {
+		if WinExist("ahk_group PLTHub") {
 		OutputDebug, % DebugIntro() "Waiting on Plantronics Hub to close"
 		Process, WaitClose, PLTHub.exe, 3
 		GroupAdd, PLTHub, ahk_exe PLTHub.exe
 		WinKill, ahk_group PLTHub
 		; WinWaitClose, ahk_group PLTHub
+		}
 	}
-	if !(acLineStatus = prevRun) {
+	if (Settings.GoogleDrive) {
+		if !(acLineStatus = prevRun) {
 		OutputDebug, % DebugIntro() "Starting GoogleDrivePauseToggle()"
 		GoogleDrivePauseToggle()
+		}
 	}
 } else if (acLineStatus = 1) {
 	OutputDebug, % DebugIntro() "Computer is plugged in"
@@ -94,20 +104,24 @@ if (acLineStatus = 0 and prevRun = 1) {
 		WinWait, ahk_exe PLTHub.exe
 		PostMessage, 0x0112, 0xF060,,, ahk_exe PLTHub.exe
 	}
-	OutputDebug, % DebugIntro() "Getting Defender Disabled Status"
-	; https://docs.microsoft.com/en-us/powershell/module/defender/get-mppreference?view=windowsserver2019-ps
-	defenderStatus := % RunWaitMany("
-		(
-    	PowerShell.exe -ExecutionPolicy Bypass -Command $Preferences = Get-MpPreference; $Preferences.DisableRealtimeMonitoring
-    	)")
-	OutputDebug, % DebugIntro() "Defender Disabled Status is " defenderStatus
-	if defenderStatus contains True 
-		OutputDebug, % DebugIntro() "Turning on Defender"
-	if defenderStatus contains True 
-		Run, *RunAs powershell.exe -ExecutionPolicy Bypass -command "Set-MpPreference -DisableRealtimeMonitoring $false",, "Min" ; https://docs.microsoft.com/en-us/powershell/module/defender/set-mppreference?view=windowsserver2019-ps
-	if !(acLineStatus = prevRun) {
-		OutputDebug, % DebugIntro() "Starting GoogleDrivePauseToggle()"
-		GoogleDrivePauseToggle()
+	if (Settings.Defender) {
+		OutputDebug, % DebugIntro() "Getting Defender Disabled Status"
+		; https://docs.microsoft.com/en-us/powershell/module/defender/get-mppreference?view=windowsserver2019-ps
+		defenderStatus := % RunWaitMany("
+			(
+			PowerShell.exe -ExecutionPolicy Bypass -Command $Preferences = Get-MpPreference; $Preferences.DisableRealtimeMonitoring
+			)")
+		OutputDebug, % DebugIntro() "Defender Disabled Status is " defenderStatus
+		if defenderStatus contains True 
+			OutputDebug, % DebugIntro() "Turning on Defender"
+		if defenderStatus contains True 
+			Run, *RunAs powershell.exe -ExecutionPolicy Bypass -command "Set-MpPreference -DisableRealtimeMonitoring $false",, "Min" ; https://docs.microsoft.com/en-us/powershell/module/defender/set-mppreference?view=windowsserver2019-ps
+	}
+	if (Settings.GoogleDrive) {
+		if !(acLineStatus = prevRun) {
+			OutputDebug, % DebugIntro() "Starting GoogleDrivePauseToggle()"
+			GoogleDrivePauseToggle()
+		}
 	}
 }
 OutputDebug, % DebugIntro() A_ScriptName " completed --------------------"
@@ -189,38 +203,3 @@ GoogleDrivePauseToggle() {
 	WinClose, Google Drive ahk_class CabinetWClass ahk_exe Explorer.EXE
 	OutputDebug, % FormatLocalTime() ":`t" A_ScriptName ": Google Drive script is completed"
 }
-
-; DebugIntro() ; Returns Debug Intro which includes Local Time and Script name
-; {
-; 	return % (FormatLocalTime() "=> " A_ScriptName ": ")
-; }
-
-; FormatLocalTime() ; Returns current time as local time
-; {
-;     FormatTime, localTime,,MM/dd/yyyy HH:mm:ss
-;     return localTime
-; }
-
-; RunWaitOne(command) { ; https://www.autohotkey.com/docs/commands/Run.htm#StdOut
-;     ; WshShell object: http://msdn.microsoft.com/en-us/library/aew9yb99
-;     shell := ComObjCreate("WScript.Shell")
-;     ; Execute a single command via cmd.exe
-;     exec := shell.Exec(ComSpec " /C " command)
-;     ; Read and return the command's output
-;     return exec.StdOut.ReadAll()
-; }
-
-; RunWaitMany(commands) { ; https://www.autohotkey.com/docs/commands/Run.htm#StdOut
-;     shell := ComObjCreate("WScript.Shell")
-;     ; Open cmd.exe with echoing of commands disabled
-;     exec := shell.Exec(ComSpec " /Q /K echo off")
-;     ; Send the commands to execute, separated by newline
-;     exec.StdIn.WriteLine(commands "`nexit")  ; Always exit at the end!
-;     ; Read and return the output of all commands
-;     return exec.StdOut.ReadAll()
-; }
-
-; ProcessExist(Name){
-; 	Process,Exist,%Name%
-; 	return Errorlevel
-; }
