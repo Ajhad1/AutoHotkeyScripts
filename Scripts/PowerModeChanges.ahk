@@ -36,9 +36,18 @@ if (acLineStatus = 0 and prevRun = 1) {
 		OutputDebug, % DebugIntro() "Stopping Executables"
 		OutputDebug, % DebugIntro() "--------------------"
 		OutputDebug, % DebugIntro() "Stopping PLTHub.exe"
-		Process, WaitClose, PLTHub.exe, 3
-		GroupAdd, PLTHub, ahk_exe PLTHub.exe
-		WinKill, ahk_group PLTHub
+		if ProcessExist("PLTHub.exe") {
+			TrayIcon_Button("PLTHub.exe")
+			Sleep, 250
+			Send, {Tab}
+			Sleep, 250
+			Send, {Up}
+			Sleep, 250
+			Send, {Enter}
+			; Process, WaitClose, PLTHub.exe, 3
+			; GroupAdd, PLTHub, ahk_exe PLTHub.exe
+			; WinKill, ahk_group PLTHub
+		}
 		OutputDebug, % DebugIntro() "Stopping SpokesUpdateService.exe"
 		Process, Close, SpokesUpdateService.exe
 		OutputDebug, % DebugIntro() "Stopping VirtualDesktop.Service.exe"
