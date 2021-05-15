@@ -37,13 +37,14 @@ if (acLineStatus = 0 and prevRun = 1) {
 		OutputDebug, % DebugIntro() "--------------------"
 		OutputDebug, % DebugIntro() "Stopping PLTHub.exe"
 		if ProcessExist("PLTHub.exe") {
-			TrayIcon_Button("PLTHub.exe")
-			Sleep, 250
-			Send, {Tab}
-			Sleep, 250
-			Send, {Up}
-			Sleep, 250
-			Send, {Enter}
+			Run, taskkill /IM "PLTHub.exe" /F,, "Hide"
+			; TrayIcon_Button("PLTHub.exe")
+			; Sleep, 250
+			; Send, {Tab}
+			; Sleep, 250
+			; Send, {Up}
+			; Sleep, 250
+			; Send, {Enter}
 			; Process, WaitClose, PLTHub.exe, 3
 			; GroupAdd, PLTHub, ahk_exe PLTHub.exe
 			; WinKill, ahk_group PLTHub
@@ -83,17 +84,17 @@ if (acLineStatus = 0 and prevRun = 1) {
 	}
 	if (Settings.StopServices) {
 		if WinExist("ahk_group PLTHub") {
-		OutputDebug, % DebugIntro() "Waiting on Plantronics Hub to close"
-		Process, WaitClose, PLTHub.exe, 3
-		GroupAdd, PLTHub, ahk_exe PLTHub.exe
-		WinKill, ahk_group PLTHub
-		; WinWaitClose, ahk_group PLTHub
+			OutputDebug, % DebugIntro() "Waiting on Plantronics Hub to close"
+			Process, WaitClose, PLTHub.exe, 3
+			GroupAdd, PLTHub, ahk_exe PLTHub.exe
+			WinKill, ahk_group PLTHub
+			; WinWaitClose, ahk_group PLTHub
 		}
 	}
 	if (Settings.GoogleDrive) {
 		if !(acLineStatus = prevRun) {
-		OutputDebug, % DebugIntro() "Starting GoogleDrivePauseToggle()"
-		GoogleDrivePauseToggle()
+			OutputDebug, % DebugIntro() "Starting GoogleDrivePauseToggle()"
+			GoogleDrivePauseToggle()
 		}
 	}
 } else if (acLineStatus = 1) {

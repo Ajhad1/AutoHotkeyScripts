@@ -11,12 +11,6 @@ SendMode Input  ; Recommended for new scripts due to its superior speed and reli
 SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 
 OutputDebug, % FormatLocalTime() ": " A_ScriptName ": Pausing Google Drive ---------------------------------------"
-TrayIcon_Button("PLTHub.exe")
-Sleep, 250
-Send, {Tab}
-Sleep, 250
-Send, {Up}
-Sleep, 250
-Send, {Enter}
-; Sleep, 250
-; Send, {Down}
+if ProcessExist("PLTHub.exe") {
+    Run, taskkill /IM "PLTHub.exe" /F
+}
