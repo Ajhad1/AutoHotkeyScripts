@@ -22,10 +22,12 @@ OutputDebug, % DebugIntro() "Plugged Status is " acLineStatus " and PrevRun is "
 
 if (acLineStatus = 0 and prevRun = 0) {
 	OutputDebug, % DebugIntro() "Computer is not plugged in"
-}
-
-if (acLineStatus = 0 and prevRun = 1) {
+	OutputDebug, % DebugIntro() "Restarting broken ArmouryCrate Service"
+	Run, taskkill /IM "ArmouryCrate.Service.exe" /F
+} else if (acLineStatus = 0 and prevRun = 1) {
 	OutputDebug, % DebugIntro() "Computer is not plugged in"
+	OutputDebug, % DebugIntro() "Restarting broken ArmouryCrate Service"
+	Run, taskkill /IM "ArmouryCrate.Service.exe" /F
 	OutputDebug, % DebugIntro() "Changing Resolution"
     ChangeResolution(32,1920,1080,60)
 	if (Settings.BluetoothOff) {
