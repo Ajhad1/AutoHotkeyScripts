@@ -11,3 +11,8 @@
 
 ;  #If ; turns off context sensitivity
 Notify(Settings.ScriptName " is loading AppSpecific.ahk",,Settings.NotificationTimer,"Style=StandardGray")
+
+#If WinActive("ahk_class Notepad++")
+#c::
+MsgBox, You pressed Win-C while Notepad is active.
+return
