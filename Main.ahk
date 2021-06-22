@@ -33,8 +33,6 @@ Else
 	WinClose, %A_ScriptDir%\Util\AutoCorrect.ahk ahk_class AutoHotkey
 }
 
-; #Include *i %A_ScriptDir%\Scripts\Hotkeys.ahk
-#Include *i %A_ScriptDir%\Scripts\AppSpecific.ahk
 #Include *i %A_ScriptDir%\Scripts\HotStrings.ahk
 
 If (Settings.StartupNotification)
@@ -55,6 +53,9 @@ If (Settings.PowerModeChangesOnStartup and Settings.SleepActivate) {
     ; RunWait, %A_ScriptDir%\Scripts\PowerModeChanges.ahk
     Notify(Settings.ScriptName " finished PowerModeChanges",,Settings.NotificationTimer,"Style=StandardGray")
 }
+
+#Include %A_ScriptDir%\Scripts\HotKeys.ahk
+; #Include %A_ScriptDir%\Scripts\AppSpecific.ahk
 
 ; PowerModeChanges:
 ; Notify(Settings.ScriptName " running PowerModeChanges",,Settings.NotificationTimer,"Style=StandardGray")
